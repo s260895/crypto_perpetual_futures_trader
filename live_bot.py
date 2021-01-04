@@ -27,10 +27,6 @@ import numpy as np
 
 # print('CCXT Version:', ccxt.__version__)
 
-
-# In[194]:
-
-
 def get_last_n_kline_closes(n=50,interval='1h',symbol='BTC/USDT'):
     
     exchange = ccxt.binance({
@@ -193,7 +189,7 @@ def open_market_short(mode='paper',balance=1,symbol='BTC/USDT',leverage="5"):
 
     return order
 
-def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',leverage="5",asset='USDT',strat='ema_cross_over_under',fast_ema=10,slow_ema=40):
+def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat='ema_cross_over_under',fast_ema=10,slow_ema=40):
     
     allowed_intervals = ['1d','6h','4h','1h','15m','5m']
     
@@ -340,8 +336,8 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',leverage="5",asset=
                                     #     time.sleep(400)
                                     #     # break
                                     try:
-                                        order = open_market_long(mode=mode,balance=1,symbol=symbol,leverage=leverage)
-                                        print("Long Opened Successfully")
+                                        order = open_market_long(mode=mode,balance=1,symbol=symbol,leverage="5")
+                                        print("5x Long Opened Successfully")
                                         print("Details of Opened Long:")
                                         print(order)
                                         time.sleep(60)
@@ -383,8 +379,8 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',leverage="5",asset=
                                     #     time.sleep(400)
                                     #     # break
                                     try:
-                                        order = open_market_short(mode=mode,balance=1,symbol=symbol,leverage=leverage)
-                                        print("Short Opened Successfully")
+                                        order = open_market_short(mode=mode,balance=1,symbol=symbol,leverage="2")
+                                        print("2x Short Opened Successfully")
                                         print("Details of Opened Short:")
                                         print(order)
                                         time.sleep(60)
@@ -406,7 +402,7 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',leverage="5",asset=
 # In[ ]:
 
 
-runner(mode='paper',symbol='BTC/USDT',n=50,interval='4h',leverage='5')
+runner(mode='paper',symbol='BTC/USDT',n=50,interval='4h')
 #intrval=4h,n=110,fast_ema=50,slow_ema=100,leverage=5
 
 
