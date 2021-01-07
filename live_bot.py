@@ -1,13 +1,4 @@
 
-# In[113]:
-
-
-g_api_key =    "yvZrfjvPSaICC0XyQjE2wSJxFwwnQuuay6IT4yEXhvrKOl0lINutgLVaMLujWWxe"
-g_secret_key = "TAWFZOhfEkCVAP52XlZAGTXHeKRbWlvX0zBvEoippbhumPvIQnZZGYEo4gr4Xko9"
-
-
-# In[189]:
-
 
 import os
 import sys
@@ -399,10 +390,8 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
         
 
 
-# In[ ]:
 
-
-runner(mode='paper',symbol='BTC/USDT',n=50,interval='4h')
+runner(mode='paper',symbol='BTC/USDT',n=50,interval='1d')
 #intrval=4h,n=110,fast_ema=50,slow_ema=100,leverage=5
 
 
