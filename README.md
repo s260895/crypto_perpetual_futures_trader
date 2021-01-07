@@ -1,6 +1,8 @@
-# Bot for automated rule based algorithmic trading of perpetual swaps on Binance crypto exchange.
 # Disclaimer:
-# Use at own risk.
+  Use at own risk.
+
+
+# Bot for automated rule based algorithmic trading of perpetual swaps on Binance crypto exchange.
 
 #Steps:
 #1. Clone git repo
