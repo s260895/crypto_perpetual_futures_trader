@@ -1,5 +1,4 @@
 
-
 import os
 import sys
 from pprint import pprint
@@ -104,8 +103,9 @@ def get_balance(mode='paper',asset='USDT'):
         },
         'hedgeMode':True
     })
-    return float([elem for elem in exchange.fapiPrivate_get_balance({'asset':asset}) if elem['asset']== asset][0]['balance'])
-
+                
+    return str(float([float(elem['balance']) for elem in exchange.fapiPrivate_get_balance() if elem['asset']==asset][0])) + '+' + str(sum([float(elem['unRealizedProfit']) for elem in exchange.fapiPrivateV2_get_positionrisk() if float(elem['positionAmt']) >0]))
+    
 def close_all_open_positions(mode='paper',symbol='BTC/USDT'):
         
     exchange = ccxt.binance({
@@ -232,7 +232,7 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
         try:
             
             if datetime.datetime.utcnow().minute in check_minutes and  datetime.datetime.utcnow().hour in check_hours:
-                print("New Candle Detected ")
+                # print("New Candle Detected ")
                 try:
                     balance = get_balance(mode=mode,asset=asset)
                     # break
@@ -243,149 +243,153 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
                     continue
                 # if ctr>5:
                 #     continue
-                print("Current Balance:")
+                print("Margin Balance @ ",end="",flush=True)
+                print(datetime.datetime.utcnow())
                 print(balance)
 
-                try:
-                    current_input = get_last_n_kline_closes(n=n,interval=interval)
+                ## REMOVE AFTERWARDS ##
+                time.sleep(61)
+
+                # try:
+                #     current_input = get_last_n_kline_closes(n=n,interval=interval)
                     
-                    # break
-                except Exception as e:
-                    time.sleep(10)
-                    print("Failed to get last n klines,Retrying...")
-                    print(e)
-                    continue
-                try:
-                    current_signal = generate_signal(current_input,strat=strat,fast_ema=fast_ema,slow_ema=slow_ema)
-                    # time.sleep(60)
-                    # break
-                except Exception as e:
-                    print("Failed to generate signal from last n klines,Retrying...")
-                    time.sleep(10)
-                    print(e)
-                    continue
-                print("Current Signal:")
-                print(current_signal)
+                #     # break
+                # except Exception as e:
+                #     time.sleep(10)
+                #     print("Failed to get last n klines,Retrying...")
+                #     print(e)
+                #     continue
+                # try:
+                #     current_signal = generate_signal(current_input,strat=strat,fast_ema=fast_ema,slow_ema=slow_ema)
+                #     # time.sleep(60)
+                #     # break
+                # except Exception as e:
+                #     print("Failed to generate signal from last n klines,Retrying...")
+                #     time.sleep(10)
+                #     print(e)
+                #     continue
+                # print("Current Signal:")
+                # print(current_signal)
                 
-                if current_signal == "NONE":
-                    time.sleep(60)
+                # if current_signal == "NONE":
+                #     time.sleep(60)
                 
           
-                if current_signal != "NONE":
-                    while True:
-                        ctr = 0
-                        while True:
-                            ctr+=1
+                # if current_signal != "NONE":
+                #     while True:
+                #         ctr = 0
+                #         while True:
+                #             ctr+=1
                                     
-                            try:
-                                order = get_open_trade(mode=mode,symbol=symbol)
+                #             try:
+                #                 order = get_open_trade(mode=mode,symbol=symbol)
                             
-                                if order == 0:
-                                    current_exposure = "NONE"
-                                    # break
+                #                 if order == 0:
+                #                     current_exposure = "NONE"
+                #                     # break
 
-                                else:
-                                    current_exposure = np.sign(float(order[0]['positionAmt']))
+                #                 else:
+                #                     current_exposure = np.sign(float(order[0]['positionAmt']))
                                 
-                                if current_exposure == 1.0:
-                                    current_exposure = "LONG"
+                #                 if current_exposure == 1.0:
+                #                     current_exposure = "LONG"
 
-                                if current_exposure == -1.0:
-                                    current_exposure = "SHORT"
+                #                 if current_exposure == -1.0:
+                #                     current_exposure = "SHORT"
 
-                                break
+                #                 break
 
-                            except Exception as e:
-                                print("Failed to get current open exposure,Retrying...")
-                                print(e)
-                                time.sleep(10+2*ctr)
+                #             except Exception as e:
+                #                 print("Failed to get current open exposure,Retrying...")
+                #                 print(e)
+                #                 time.sleep(10+2*ctr)
 
-                        if current_signal == 'LONG':
-                            if current_exposure != 'LONG':
-                                print("Closing All Current Positions")
-                                ctr=0
-                                while True:
-                                    ctr+=1
-                                    # if ctr > 100:
-                                    #     print("Exceeded 100 Retries, waiting 400 Seconds")
-                                    #     time.sleep(400)
-                                    #     # break
-                                    try:
-                                        order = close_all_open_positions(mode=mode,symbol=symbol)
-                                        print("Closed Open Position Successfully")
-                                        print("Details of Closed Position:")
-                                        print(order)
-                                        break
-                                    except Exception as e:
-                                        print("Failed to Close all Open Positions,Retrying...")
-                                        print(e)
-                                        time.sleep(10+2*ctr)
+                #         if current_signal == 'LONG':
+                #             if current_exposure != 'LONG':
+                #                 print("Closing All Current Positions")
+                #                 ctr=0
+                #                 while True:
+                #                     ctr+=1
+                #                     # if ctr > 100:
+                #                     #     print("Exceeded 100 Retries, waiting 400 Seconds")
+                #                     #     time.sleep(400)
+                #                     #     # break
+                #                     try:
+                #                         order = close_all_open_positions(mode=mode,symbol=symbol)
+                #                         print("Closed Open Position Successfully")
+                #                         print("Details of Closed Position:")
+                #                         print(order)
+                #                         break
+                #                     except Exception as e:
+                #                         print("Failed to Close all Open Positions,Retrying...")
+                #                         print(e)
+                #                         time.sleep(10+2*ctr)
 
-                                print("Opening Long")
-                                ctr=0
-                                while True:
-                                    ctr+=1
-                                    # if ctr > 100:
-                                    #     print("Exceeded 100 Retries, waiting 400 Seconds")
-                                    #     time.sleep(400)
-                                    #     # break
-                                    try:
-                                        order = open_market_long(mode=mode,balance=1,symbol=symbol,leverage="5")
-                                        print("5x Long Opened Successfully")
-                                        print("Details of Opened Long:")
-                                        print(order)
-                                        time.sleep(60)
-                                        break
-                                    except Exception as e:
-                                        print("Failed to Open Market Long,Retrying...")
-                                        print(e)
-                                        time.sleep(10+2*ctr)
-                            else:
-                                time.sleep(60)
+                #                 print("Opening Long")
+                #                 ctr=0
+                #                 while True:
+                #                     ctr+=1
+                #                     # if ctr > 100:
+                #                     #     print("Exceeded 100 Retries, waiting 400 Seconds")
+                #                     #     time.sleep(400)
+                #                     #     # break
+                #                     try:
+                #                         order = open_market_long(mode=mode,balance=1,symbol=symbol,leverage="5")
+                #                         print("5x Long Opened Successfully")
+                #                         print("Details of Opened Long:")
+                #                         print(order)
+                #                         time.sleep(60)
+                #                         break
+                #                     except Exception as e:
+                #                         print("Failed to Open Market Long,Retrying...")
+                #                         print(e)
+                #                         time.sleep(10+2*ctr)
+                #             else:
+                #                 time.sleep(60)
 
-                        if current_signal == 'SHORT':
-                            if current_exposure != 'SHORT':
-                                print("Closing All Current Positions")
-                                ctr=0
-                                while True:
-                                    ctr+=1
-                                    # if ctr > 100:
-                                    #     print("Exceeded 100 Retries, waiting 400 Seconds")
-                                    #     time.sleep(400)
-                                    #     # break
-                                    try:
-                                        order = close_all_open_positions(mode=mode,symbol=symbol)
-                                        print("Closed Open Position Successfully")
-                                        print("Details of Closed Position:")
-                                        print(order)
-                                        break
-                                    except Exception as e:
-                                        print("Failed to Close all Open Positions,Retrying...")
-                                        print(e)
-                                        time.sleep(10+2*ctr)
+                #         if current_signal == 'SHORT':
+                #             if current_exposure != 'SHORT':
+                #                 print("Closing All Current Positions")
+                #                 ctr=0
+                #                 while True:
+                #                     ctr+=1
+                #                     # if ctr > 100:
+                #                     #     print("Exceeded 100 Retries, waiting 400 Seconds")
+                #                     #     time.sleep(400)
+                #                     #     # break
+                #                     try:
+                #                         order = close_all_open_positions(mode=mode,symbol=symbol)
+                #                         print("Closed Open Position Successfully")
+                #                         print("Details of Closed Position:")
+                #                         print(order)
+                #                         break
+                #                     except Exception as e:
+                #                         print("Failed to Close all Open Positions,Retrying...")
+                #                         print(e)
+                #                         time.sleep(10+2*ctr)
 
-                                print("Opening Short")
-                                ctr=0
-                                while True:
-                                    ctr+=1
-                                    # if ctr > 100:
-                                    #     print("Exceeded 100 Retries, waiting 400 Seconds")
-                                    #     time.sleep(400)
-                                    #     # break
-                                    try:
-                                        order = open_market_short(mode=mode,balance=1,symbol=symbol,leverage="2")
-                                        print("2x Short Opened Successfully")
-                                        print("Details of Opened Short:")
-                                        print(order)
-                                        time.sleep(60)
-                                        break
-                                    except Exception as e:
-                                        print("Failed to Open Market Short,Retrying...")
-                                        print(e)
-                                        time.sleep(10+2*ctr)
-                            else:
-                                time.sleep(60)            
-                        break
+                #                 print("Opening Short")
+                #                 ctr=0
+                #                 while True:
+                #                     ctr+=1
+                #                     # if ctr > 100:
+                #                     #     print("Exceeded 100 Retries, waiting 400 Seconds")
+                #                     #     time.sleep(400)
+                #                     #     # break
+                #                     try:
+                #                         order = open_market_short(mode=mode,balance=1,symbol=symbol,leverage="2")
+                #                         print("2x Short Opened Successfully")
+                #                         print("Details of Opened Short:")
+                #                         print(order)
+                #                         time.sleep(60)
+                #                         break
+                #                     except Exception as e:
+                #                         print("Failed to Open Market Short,Retrying...")
+                #                         print(e)
+                #                         time.sleep(10+2*ctr)
+                #             else:
+                #                 time.sleep(60)            
+                #         break
         
         except Exception as e:
             print("Iteration Failed,Retrying...")
@@ -394,10 +398,6 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
 
 
 
-runner(mode='paper',symbol='BTC/USDT',n=50,interval='1d')
-#intrval=4h,n=110,fast_ema=50,slow_ema=100,leverage=5
-
-
-# In[ ]:
-
+runner(mode='paper',symbol='BTC/USDT',n=50,interval='15m')
+# print(get_balance())
 
