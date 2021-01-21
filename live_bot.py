@@ -11,7 +11,7 @@ import datetime
 import time
 
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 
@@ -169,40 +169,18 @@ def close_all_open_positions(mode='paper',symbol='BTC/USDT'):
 
     if mode == 'paper':
         global paper_positions
-        open_trade = paper_positions
+        
         if paper_positions == 0:
             return None
         
-        if paper_positions[0]['positionAmt']
+        if np.sign(float(paper_positions['positionAmt'])) == -1.0:
+            return
+            
 
 
-def open_market_long(mode='paper',balance=1,symbol='BTC/USDT',leverage="5"):
-        
-    exchange = ccxt.binance({
-            'apiKey': g_api_key,
-            'secret': g_secret_key,
-            'enableRateLimit': True,
-            'options': {
-                'defaultType': 'future',
-            },
-            'hedgeMode':True
-        })
-    # symbol = 'BTC/USDT'
-    markets = exchange.load_markets()
-    #exchange.verbose=True
-    market = exchange.market(symbol)
-    quoteqty = float([elem for elem in exchange.fapiPrivate_get_balance() if elem['asset']=='USDT'][0]['balance']) * balance
-    price = float(exchange.fapiPublic_get_ticker_price({'symbol':market['id']})['price'])
-    baseqty = "{:.3f}".format(quoteqty*float(leverage)/price)
-    baseqty = str(float(baseqty)-0.001)
-    lev_req = exchange.fapiPrivate_post_leverage({'symbol':market['id'],'leverage':leverage})
-    order = exchange.fapiPrivatePostOrder({'symbol':market['id'], 'type':"MARKET", 'side':"BUY",'positionSide':"BOTH" ,'quantity':baseqty})
 
-    return order
-
-
-def open_market_short(mode='paper',balance=1,symbol='BTC/USDT',leverage="5"):
-    
+def open_market_order(mode='paper',balance=1,symbol='BTC/USDT',leverage="5",side="BUY",hedge_mode="BOTH"):
+    sym = [elem for elem in symbol if elem!='/']
     exchange = ccxt.binance({
             'apiKey': g_api_key,
             'secret': g_secret_key,
@@ -219,9 +197,9 @@ def open_market_short(mode='paper',balance=1,symbol='BTC/USDT',leverage="5"):
     quoteqty = float([elem for elem in exchange.fapiPrivate_get_balance({'asset':"USDT"}) if elem['asset']=='USDT'][0]['balance']) * balance
     price = float(exchange.fapiPublic_get_ticker_price({'symbol':market['id']})['price'])
     baseqty = "{:.3f}".format(quoteqty*float(leverage)/price)
-    baseqty = str(float(baseqty)-0.001)
+    baseqty = str(float(baseqty)-float([elem for elem in exchange.fapiPublic_get_exchangeinfo()['symbols'] if elem['symbol']==sym][0]['filters'][2]['minQty']))
     lev_req = exchange.fapiPrivate_post_leverage({'symbol':market['id'],'leverage':leverage})
-    order = exchange.fapiPrivatePostOrder({'symbol':market['id'], 'type':"MARKET", 'side':"SELL",'positionSide':"BOTH" ,'quantity':baseqty})
+    order = exchange.fapiPrivatePostOrder({'symbol':market['id'], 'type':"MARKET", 'side':side,'positionSide':hedge_mode ,'quantity':baseqty})
 
     return order
 
@@ -374,7 +352,7 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
                                     #     time.sleep(400)
                                     #     # break
                                     try:
-                                        order = open_market_long(mode=mode,balance=1,symbol=symbol,leverage=long_leverage)
+                                        order = open_market_order(mode=mode,balance=1,symbol=symbol,leverage=long_leverage,side="BUY")
                                         print("Long Opened Successfully")
                                         print("Details of Opened Long:")
                                         print(order)
@@ -417,7 +395,7 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
                                     #     time.sleep(400)
                                     #     # break
                                     try:
-                                        order = open_market_short(mode=mode,balance=1,symbol=symbol,leverage=short_leverage)
+                                        order = open_market_order(mode=mode,balance=1,symbol=symbol,leverage=short_leverage,side="SELL")
                                         print("Short Opened Successfully")
                                         print("Details of Opened Short:")
                                         print(order)
@@ -435,6 +413,9 @@ def runner(mode='paper',symbol='BTC/USDT',n=50,interval='1h',asset='USDT',strat=
             print("Iteration Failed,Retrying...")
             print(e)
         
+
+
+
 
 
 
