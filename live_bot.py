@@ -82,7 +82,7 @@ def get_open_trade(mode='paper',symbol='BTC/USDT'):
         exchange = ccxt.binance({
             'apiKey': g_api_key,
             'secret': g_secret_key,
-            'enableRateLimit': True,  # https://github.com/ccxt/ccxt/wiki/Manual#rate-limit
+            'enableRateLimit': True,
             'options': {
                 'defaultType': 'future',
             },
