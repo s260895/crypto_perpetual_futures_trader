@@ -1,0 +1,3 @@
+,market_name,position_type,entry_time,exit_time,entry_price,exit_price,leverage,trade_pnl_pct,paper_equity
+0,-,-,-,-,-,-,-,-,10000
+1,DEFIUSDT,SHORT,2021-03-30 12:30:04.107413,-,2700.297,-,5,-,-
