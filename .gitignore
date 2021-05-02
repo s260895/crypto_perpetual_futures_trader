@@ -1,8 +1,6 @@
 # jupyter
 *.ipynb_checkpoints
 notebook.ipynb
-
-
 rdme.txt
 
 # VSCode
