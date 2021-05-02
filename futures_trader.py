@@ -882,4 +882,4 @@ paper_trades = paper_trades.append(trade,ignore_index=True)
 paper_trades.to_csv('paper_trades.csv')
 
 
-runner(mode='paper',symbol='BTCUSDT',candles=170,interval='1d',asset='USDT',strat='ema_cross_over_under',strat_params={'fast_ema':10,'slow_ema':40},short_leverage='2',long_leverage ='4',user_api_key='0FRLwhJbrwz2MRnTOcW2C5DNKiePASxBDaKTEWxNRzfvtX5wKGu0CXkv9umNKtU5',user_secret_key='3fraEY21BKuRWKEW3ltsroEmDioWqhKns7E84w3CsG2MAuLWgvC8DPygCtdSa65O')
+runner(mode='paper',symbol='BTCUSDT',candles=170,interval='1d',asset='USDT',strat='ema_cross_over_under',strat_params={'fast_ema':10,'slow_ema':40},short_leverage='2',long_leverage ='4',user_api_key='',user_secret_key='')
