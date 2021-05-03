@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib import pyplot as plt
 from IPython.display import clear_output
 import numpy as np
+
 # import mplcursors
 
 # root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -56,7 +57,6 @@ def generate_signal(candles=50,interval='1h',symbol='BTCUSDT',strat='ema_cross_o
 
         '''under development'''
         return "NONE"
-
    
     if strat == 'ema_diff_peak_trough':
         candles = strat_params['slow_ema'] + 10
@@ -90,7 +90,6 @@ def generate_signal(candles=50,interval='1h',symbol='BTCUSDT',strat='ema_cross_o
             return 'LONG'
         return "NONE"
      
-
     if strat == 'ema_cross_over_under':
         candles = strat_params['slow_ema'] + 10
 
@@ -867,8 +866,8 @@ def runner(mode='live',symbol='BTCUSDT',candles=50,interval='1h',asset='USDT',st
                
 # runner(mode='paper',symbol='DEFIUSDT',candles=30,interval='5m',asset='USDT',strat='ema_cross_over_under',strat_params={'fast_ema':4,'slow_ema':20},short_leverage="1",long_leverage="1")
 
+'''define risk manager function'''
 # def risk_manager(mode='live',symbol='BTCUSDT',interval='4h',)
-
 
 '''define initial paper balance'''
 starting_paper_balance = 10000
@@ -877,9 +876,9 @@ starting_paper_balance = 10000
 paper_trades = pd.DataFrame([],columns=['market_name','position_type','entry_time','exit_time','entry_price','exit_price','leverage','trade_pnl_pct','paper_equity'])
 
 trade = pd.DataFrame([['-','-','-','-','-','-','-','-',starting_paper_balance]],columns=['market_name','position_type','entry_time','exit_time','entry_price','exit_price','leverage','trade_pnl_pct','paper_equity'])
+
 paper_trades = paper_trades.append(trade,ignore_index=True)
 
 paper_trades.to_csv('paper_trades.csv')
-
 
 runner(mode='paper',symbol='BTCUSDT',candles=170,interval='1d',asset='USDT',strat='ema_cross_over_under',strat_params={'fast_ema':10,'slow_ema':40},short_leverage='2',long_leverage ='4',user_api_key='',user_secret_key='')
