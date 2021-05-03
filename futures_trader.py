@@ -425,7 +425,6 @@ def get_strat_performance(strat='ema_cross_over_under',leverage=1,strat_params={
         # print(principal)
         equity_curve.append(principal)
     pd.DataFrame(equity_curve).plot()
-    
 
     trade_pnl = list()
     principal = 1
@@ -737,7 +736,6 @@ def runner(mode='live',symbol='BTCUSDT',candles=50,interval='1h',asset='USDT',st
         markets = exchange.load_markets()   
 
         get_strat_price_ti_plot(strat=strat,strat_params=strat_params,symbol=symbol,interval=interval,candles=candles,exchange=exchange)
-
       
         ### Run while loop in perpetuity unless explicitly terminated by a KeyboardInterrupt ###
         while True:
@@ -761,8 +759,6 @@ def runner(mode='live',symbol='BTCUSDT',candles=50,interval='1h',asset='USDT',st
 
                     clear_output(wait=True)
                     get_strat_price_ti_plot(strat=strat,strat_params=strat_params,symbol=symbol,interval=interval,candles=candles,exchange=exchange)
-
-
 
                     # print("New Candle Detected")
                     
