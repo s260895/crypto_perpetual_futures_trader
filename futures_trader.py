@@ -459,7 +459,6 @@ def get_strat_price_ti_plot(strat='ema_cross_over_under',strat_params={'fast_ema
 
         return None
 
-
     if strat == 'ema_cross_over_under':
         
         current_input=get_last_n_kline_closes(symbol=symbol,n=candles,interval=interval,exchange=exchange)[:-1]
