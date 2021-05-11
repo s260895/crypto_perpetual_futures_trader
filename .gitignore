@@ -2,6 +2,6 @@
 *.ipynb_checkpoints
 notebook.ipynb
 rdme.txt
-
+Binance_BTCUSDT_d.csv
 # VSCode
 .vscode
