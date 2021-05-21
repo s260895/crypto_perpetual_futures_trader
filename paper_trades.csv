@@ -1,3 +1,2 @@
 ,market_name,position_type,entry_time,exit_time,entry_price,exit_price,leverage,trade_pnl_pct,paper_equity
 0,-,-,-,-,-,-,-,-,10000
-1,BTCUSDT,LONG,2021-05-08 00:03:16.137221,-,57492.55512,-,4,-,-
